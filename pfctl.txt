@@ -1,0 +1,23 @@
+#
+# pf redirection
+#
+
+#The ports to redirect to proxy
+redir_ports = "{http, https}"
+
+#The user the transparent proxy is running as
+proxy_user = "nsyilmaz"
+
+#The users whose connection must be redirected.
+#
+#This cannot involve the user which runs the
+#transparent proxy as that would cause an infinite loop.
+#
+
+rdr pass inet proto tcp from 192.168.1.39 to any port {80, 443} -> 127.0.0.1 port 8080
+pass out route-to (lo0 127.0.0.1) proto tcp from any to any port $redir_ports user { != $proxy_user }
+
+
+
+
+#rdr pass on bridge100 inet proto tcp from 192.168.10.0/24 to any port {80, 443} -> 127.0.0.1 port 8080
